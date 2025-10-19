@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Keep Notes</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+background: #f1f3f4;
+margin: 0;
+padding: 0;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+h1 {
+background: white;
+color: #333;
+width: 100%;
+padding: 15px;
+text-align: center;
+margin: 0;
+}
+
+#noteInput {
+width: 80%;
+max-width: 500px;
+margin-top: 20px;
+padding: 10px;
+font-size: 16px;
+border: 2px solid black;
+border-radius: 5px;
+outline: none;
+}
+
+#addBtn {
+margin-top: 10px;
+padding: 10px 20px;
+background: blue;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+font-weight: bold;
+}
+
+#notesContainer {
+margin-top: 20px;
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+gap: 15px;
+width: 90%;
+max-width: 800px;
+}
+
+.note {
+background: white;
+padding: 15px;
+border-radius: 10px;
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+width: 200px;
+position: relative;
+word-wrap: break-word;
+}
+
+.deleteBtn {
+position: absolute;
+top: 5px;
+right: 10px;
+background: red;
+color: white;
+border: none;
+border-radius: 50%;
+width: 25px;
+height: 25px;
+cursor: pointer;
+}
+</style>
+</head>
+<body>
+<h1> Keep Notes</h1>
+<textarea id="noteInput" rows="4" placeholder="Write your note here..."></textarea>
+<button id="addBtn">Add Note</button>
+
+<div id="notesContainer"></div>
+
+<script>
+const noteInput = document.getElementById("noteInput");
+const addBtn = document.getElementById("addBtn");
+const notesContainer = document.getElementById("notesContainer");
+
+// Load saved notes
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
+
+function showNotes() {
+notesContainer.innerHTML = "";
+notes.forEach((note, index) => {
+const noteDiv = document.createElement("div");
+noteDiv.className = "note";
+noteDiv.innerHTML = `
+<button class="deleteBtn" onclick="deleteNote(${index})">Ã—</button>
+${note}
+`;
+notesContainer.appendChild(noteDiv);
+});
+}
+
+function addNote() {
+const noteText = noteInput.value.trim();
+if (noteText === "") return alert("Please write something!");
+notes.push(noteText);
+localStorage.setItem("notes", JSON.stringify(notes));
+noteInput.value = "";
+showNotes();
+}
+
+function deleteNote(index) {
+notes.splice(index, 1);
+localStorage.setItem("notes", JSON.stringify(notes));
+showNotes();
+}
+
+addBtn.addEventListener("click", addNote);
+showNotes();
+</script>
+</body>
+</html>
